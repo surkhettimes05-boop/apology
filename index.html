@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff0f3">
+  <title>I'm sorry</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%9B%3C/text%3E%3C/svg%3E">
+  <style>
+    /* Theme colors and page defaults */
+    :root {
+      color-scheme: light;
+      --page-start: #fff3f5;
+      --page-end: #fce4ec;
+      --card: rgba(255, 255, 255, 0.88);
+      --text: #49353c;
+      --muted: #876e77;
+      --accent: #d85d7b;
+      --accent-hover: #c64b69;
+      --button-muted: #eee9eb;
+      --button-muted-text: #766b6f;
+      --shadow: 0 24px 70px rgba(117, 61, 79, 0.14);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --page-start: #211b20;
+        --page-end: #38252f;
+        --card: rgba(47, 38, 44, 0.94);
+        --text: #fff0f3;
+        --muted: #c8adb7;
+        --accent: #ed7895;
+        --accent-hover: #f18ca5;
+        --button-muted: #51454c;
+        --button-muted-text: #f0dce3;
+        --shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+      }
+    }
+
+    /* Responsive page layout */
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-width: 320px;
+      min-height: 100%;
+      margin: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: max(24px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+      background: linear-gradient(145deg, var(--page-start), var(--page-end));
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    /* Apology card and its content */
+    .card {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 520px);
+      padding: clamp(32px, 8vw, 58px) clamp(24px, 7vw, 54px);
+      border: 1px solid rgba(255, 255, 255, 0.58);
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      text-align: center;
+      backdrop-filter: blur(12px);
+      animation: card-arrive 650ms cubic-bezier(0.2, 0.75, 0.3, 1) both;
+    }
+
+    h1 {
+      margin: 0 0 22px;
+      font-size: clamp(2rem, 8vw, 2.8rem);
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .message,
+    .thanks-message {
+      margin: 0 auto 28px;
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.75;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+    }
+
+    .question {
+      margin: 0 0 22px;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      min-height: 52px;
+    }
+
+    .button {
+      min-height: 48px;
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 22px;
+      font: inherit;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .yes-button {
+      position: relative;
+      z-index: 2;
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 7px 18px rgba(187, 67, 99, 0.2);
+      transform: scale(var(--yes-scale, 1));
+      transition: transform 220ms ease, background-color 180ms ease;
+      transform-origin: center;
+    }
+
+    .yes-button:hover {
+      background: var(--accent-hover);
+    }
+
+    .no-button {
+      position: relative;
+      background: var(--button-muted);
+      color: var(--button-muted-text);
+      transition: left 180ms ease, top 180ms ease;
+    }
+
+    .hint {
+      min-height: 1.5em;
+      margin: 21px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Floating celebration and entrance motion */
+    .emoji-float {
+      position: fixed;
+      z-index: 5;
+      bottom: -48px;
+      left: var(--left);
+      pointer-events: none;
+      font-size: var(--size);
+      opacity: 0;
+      animation: float-up var(--duration) ease-out forwards;
+      animation-delay: var(--delay);
+    }
+
+    @keyframes float-up {
+      0% { transform: translate3d(0, 0, 0) rotate(0deg); opacity: 0; }
+      12% { opacity: 1; }
+      100% { transform: translate3d(var(--drift), -115vh, 0) rotate(var(--rotation)); opacity: 0; }
+    }
+
+    @keyframes card-arrive {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card" aria-live="polite">
+    <section id="question-screen" aria-labelledby="apology-title">
+      <h1 id="apology-title"></h1>
+      <p class="message" id="apology-message"></p>
+      <p class="question">Can you forgive me?</p>
+      <div class="button-row">
+        <button class="button yes-button" id="yes-button" type="button">Yes, I forgive you</button>
+        <button class="button no-button" id="no-button" type="button">No, I'm still mad</button>
+      </div>
+      <p class="hint" id="hint" aria-live="polite">It's okay to take your time.</p>
+    </section>
+
+    <section id="thanks-screen" class="hidden" aria-labelledby="thanks-title">
+      <h1 id="thanks-title">Thank you 💛</h1>
+      <p class="thanks-message" id="thanks-message"></p>
+    </section>
+  </main>
+
+  <script>
+    // Edit these three values to personalize your apology.
+    const NAME = "Swasteka";
+    const MESSAGE = "Hey Swasteka, I'm sorry for upsetting you. I value our friendship and hope we can move past it when you're ready.";
+    const THANKS = "Thanks for hearing me out. I really appreciate you.";
+
+    // Set up personalized copy and the apology controls.
+    const title = document.getElementById("apology-title");
+    const message = document.getElementById("apology-message");
+    const thanksMessage = document.getElementById("thanks-message");
+    const questionScreen = document.getElementById("question-screen");
+    const thanksScreen = document.getElementById("thanks-screen");
+    const yesButton = document.getElementById("yes-button");
+    const noButton = document.getElementById("no-button");
+    const hint = document.getElementById("hint");
+
+    title.textContent = `I'm sorry, ${NAME}`;
+    message.textContent = MESSAGE;
+    thanksMessage.textContent = THANKS;
+
+    // Move the No button to a fully visible random spot and grow Yes.
+    const playfulHints = [
+      "Nice try 😄",
+      "Too slow!",
+      "Are you sure? 🥺",
+      "Maybe just say yes?",
+      "I'll keep running all day"
+    ];
+    let dodgeCount = 0;
+
+    function dodgeNoButton() {
+      const buttonRect = noButton.getBoundingClientRect();
+      const margin = 12;
+      const maxLeft = Math.max(margin, window.innerWidth - buttonRect.width - margin);
+      const maxTop = Math.max(margin, window.innerHeight - buttonRect.height - margin);
+
+      noButton.style.position = "fixed";
+      noButton.style.left = `${margin + Math.random() * (maxLeft - margin)}px`;
+      noButton.style.top = `${margin + Math.random() * (maxTop - margin)}px`;
+      noButton.style.zIndex = "4";
+
+      dodgeCount += 1;
+      yesButton.style.setProperty("--yes-scale", String(Math.min(2.2, 1 + dodgeCount * 0.12)));
+      hint.textContent = playfulHints[(dodgeCount - 1) % playfulHints.length];
+    }
+
+    noButton.addEventListener("mouseenter", dodgeNoButton);
+    noButton.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      dodgeNoButton();
+    }, { passive: false });
+    noButton.addEventListener("click", dodgeNoButton);
+
+    // Show the thank-you state and release a brief burst of floating emojis.
+    function celebrate() {
+      const emojis = ["💛", "💖", "✨", "🌸"];
+      for (let index = 0; index < 30; index += 1) {
+        const particle = document.createElement("span");
+        particle.className = "emoji-float";
+        particle.setAttribute("aria-hidden", "true");
+        particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        particle.style.setProperty("--left", `${Math.random() * 100}vw`);
+        particle.style.setProperty("--size", `${18 + Math.random() * 22}px`);
+        particle.style.setProperty("--duration", `${3.2 + Math.random() * 2.2}s`);
+        particle.style.setProperty("--delay", `${Math.random() * 1.1}s`);
+        particle.style.setProperty("--drift", `${-70 + Math.random() * 140}px`);
+        particle.style.setProperty("--rotation", `${-45 + Math.random() * 90}deg`);
+        particle.addEventListener("animationend", () => particle.remove(), { once: true });
+        document.body.appendChild(particle);
+      }
+    }
+
+    yesButton.addEventListener("click", () => {
+      questionScreen.classList.add("hidden");
+      thanksScreen.classList.remove("hidden");
+      noButton.classList.add("hidden");
+      celebrate();
+    });
+  </script>
+</body>
+</html>
